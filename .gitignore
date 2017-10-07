@@ -1,0 +1,16 @@
+*.ipynb_checkpoints
+*.egg-info
+*.pyc 
+*.bat
+*.dat
+*.zip
+*.rar
+*.tar
+cached_data
+build
+dist
+logs
+data
+settings.json
+
+
