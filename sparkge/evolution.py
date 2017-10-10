@@ -49,10 +49,6 @@ class strategy:
         replacement = self.n-mates
         scores = individuals[:,1] #1 is the index of scores on the ind matrix
         
-        #correction just in case - scale everything but the truncated max
-        #fitness function should avoid returrning this sort of thing
-        #scores[~np.isfinite(scores)] = 1000# temp hard coded for all nan case?? scores[np.isfinite(scores)].max()
-        
         scores = scores - scores.max() #minimise
         scores = scores / scores.sum() #normalize
         
