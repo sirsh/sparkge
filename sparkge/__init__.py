@@ -8,6 +8,13 @@ class options(dict):
     def __init__(self):pass
     
 class sparkge_context:
+    """
+    Example
+    arr = np.ones((100,20), np.int)
+    def f (data) : return np.random.randint(0,100,len(data)) 
+    sc =  sparkge_context() 
+    res = sc.apply_function(arr, f)
+    """
     def __init__(self, name = "sparkge_app", master="localhost"): 
         #putting imports here to only load if required
         import findspark
