@@ -1,3 +1,4 @@
+import numpy as np
 from . providers.stores import basic_store
 
 store = basic_store()
