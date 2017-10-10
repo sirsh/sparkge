@@ -13,4 +13,5 @@ logs
 data
 settings.json
 article
+spark-warehouse
 
