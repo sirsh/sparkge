@@ -5,8 +5,7 @@ store = basic_store()
    
 class MappingException(Exception):  pass
 
-class options(dict):
-    def __init__(self):pass
+class options(dict):   def __init__(self):pass
     
 class sparkge_context:
     """
