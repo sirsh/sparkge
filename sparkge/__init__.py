@@ -72,3 +72,15 @@ class sparkge_context:
                 return res if not batching else self._recover_population_from_parititions(res)
         else: print("***********skipping jobs due to failed context loading*************")
     
+def __deploy__(target_list):
+    from fabric.api import *
+    from fabric.state import output
+    command = "pip3 install git+git://github.com/sirsh/sparkge --upgrade"
+    @parallel
+    def p(): return run(command)
+    print("deploying to ", target_list)
+    res = execute(p, hosts=target_list)
+    for k in res.keys():
+        print("**********", k, "done ************")
+        for l in res[k].splitlines():
+            print(l)

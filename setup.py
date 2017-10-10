@@ -12,7 +12,7 @@ setup(
     keywords='spark grammatical evolution',
     description='using spark with the grammatical evolution method',
     long_description=('using spark with the grammatical evolution method'),
-    packages=['sparkge'],
+    packages=['sparkge', 'sparkge.providers],
     test_suite='nose.collector',
     tests_require=['nose'],
     classifiers=[
