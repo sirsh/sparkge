@@ -73,7 +73,7 @@ class sparkge_context:
         else: print("***********skipping jobs due to failed context loading*************")
     
 def __deploy__(target_list):
-    from fabric.api import *
+    from fabric.api import execute, parallel, run
     from fabric.state import output
     command = "pip3 install git+git://github.com/sirsh/sparkge --upgrade"
     @parallel
@@ -84,3 +84,4 @@ def __deploy__(target_list):
         print("**********", k, "done ************")
         for l in res[k].splitlines():
             print(l)
+            
