@@ -1,14 +1,2 @@
-*A sample for using spark with the grammatical evolution method*
-
-To use the sample, you need to setup spark and jupyter. you could work without jupyter but why would you want to do that! There are many tutorials online for setting up the Jupyter environment such as https://blog.sicara.com/get-started-pyspark-jupyter-guide-tutorial-ae2fe84f594f. Starting from zero, I would tpyically download spark to some location, install a nice distribution of python such as anaconda, install the handy findspark python package and set up some environment variables. The post explains some of these steps. If you have not used spark before, you will need to read about the configuration settings e.g. pointing to the spark master address. If you can create one such node e.g. on a google or amazon cloud, you can clone it to create a cluster of spark nodes. Adding them to the cluster just amounts to adding the list of addresses to the spark master's slaves config file. Typically, it is easiert to run a jupyter notebook from whatever node you are running the spark master.
-
-Having done this, you need to install sparkge on the cluster. This can be done using pip install and poining to the current git repository. For convience i have added a deploy(IPs) function that uses fabric to deploy the project to the cluster - so you will need to install fabric/fabric3 to use it. 
-
-TODO: test on python2 and 3 - there is at least one inspect place where i have done something 3-specific.
-
-
-proper handling or overflow and other annoying numerical degeneracies
-check if x is part of function
-check fit handler extension for symbols with choice of params and return of params
-initial value strategy for problem space configure function for warnrings, recusions etc. 
+*A sample for using spark with the grammatical evolution method (work in progress)*
 
