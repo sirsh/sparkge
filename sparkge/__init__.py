@@ -7,46 +7,61 @@ class MappingException(Exception):  pass
 class options(dict):
     def __init__(self):pass
     
-class context:
-    def __init__(self,store_provider,start_symbol,options=None):
-        self.store = store_provider
-        self.options = options
-        self.start_symbol = start_symbol
-        self.sc = None# setup spark context in this context
-    
-    def __init__(self):
-       
-        pass
-    def __enter__(self):
-        self.store.broadcast()
-    def __exit__(self):
-        self.store.report()        
-    def __iter__(self):
-        return iter(store) 
-    def __getitem__(self,key):
-        return store[key]  
-    
-    @property
-    def keys(self):
-        pass
+class sparkge_context:
+    def __init__(self, name = "sparkge_app", master="localhost"): 
+        #putting imports here to only load if required
+        import findspark
+        findspark.init()
+        import pyspark
+        from pyspark.sql import SQLContext
+        from pyspark import SparkConf, SparkContext
+        from pyspark.sql import Row,SparkSession
  
-    def transcribe(self, genome, params = []):
-        phenotype = self.start_symbol(genome,params)
-        return accepting_ordered_params(phenotype,params)#think about who controls the param order
-    
-    def evolve(self,options):
-        genotypes = self.store.genotypes
-        pool_index,replacement_index = evo.selection(self.store.meta_individuals)
-        genotypes = np.concatenate([genotypes[replacement_index], 
-                                    X(genotypes[pool_index])]) + evo.mutations(0.01)
-        self.store.update(genotypes)
-        
-    def run(self,eval_func):
-        #store.update(evolution.init())
-        #transcribe returns function of a matrix and eval_func_prov takes such a thing
-        worker_func = lambda key: eval_func(self.transcribe(self.cache[key]))
-        for gen in self.options.generations:  
-            results = self.sc.map(self.keys).reduce(lambda key: worker_func(key)).collect() #results should be id,score
-            self.store.update(results)
-            self.evolve()
+        b = SparkSession.builder.appName(name).config("master", "spark://{}:7077".format(master))
+        spark = b.getOrCreate()        
+        self.sc = spark.sparkContext
+        self.tracker = self.sc.statusTracker()
+        self.sqlContext = SQLContext(self.sc)  
+        def finalise():SparkSession._instantiatedContext = None 
             
+        self.finalize = finalise 
+        
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, type, value, traceback): 
+        if self.sc != None: 
+            self.sc.cancelAllJobs()
+            self.sc.stop()
+            self.sc = None
+            self.finalize()
+            
+    def _partition_population(self, pop, batchsize=10):
+        from itertools import islice, chain
+
+        index = list(range(len(pop)))
+        def batch(iterable, size=batchsize):
+            sourceiter = iter(iterable)
+            while True:
+                batchiter = islice(sourceiter, size)
+                yield chain([next(batchiter)], batchiter)
+        
+        for _batch in batch(range(len(pop))):
+            index = list(_batch)
+            yield {"index": index,  "data" : pop[index] }
+    
+    def _recover_population_from_parititions(self, parts):
+        return np.concatenate(parts)
+        
+    def apply_function(self, gen, _f, collect=True, batching=True):
+        f = _f
+        if batching: 
+            gen = self._partition_population(gen)
+            f= lambda tup : np.stack([np.array(tup["index"]), _f(tup["data"])],axis=1)
+        if self.sc != None:
+            if not collect:  return self.sc.parallelize(gen).map(lambda x: f(x)).count()
+            else:  
+                res = self.sc.parallelize(gen).map(lambda x: f(x)).collect()
+                return res if not batching else self._recover_population_from_parititions(res)
+        else: print("***********skipping jobs due to failed context loading*************")
+    
