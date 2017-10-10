@@ -1,6 +1,7 @@
-from . import symbols
-from . import evolution 
-    
+from . providers.stores import basic_store
+
+store = basic_store()
+   
 class MappingException(Exception):  pass
 
 class options(dict):
