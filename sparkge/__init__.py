@@ -65,7 +65,7 @@ class sparkge_context:
         f = _f
         if batching: 
             gen = self._partition_population(gen)
-            f= lambda tup : np.stack([np.array(tup["index"]), _f(tup["data"])],axis=1)
+            f= lambda tup :  _f(tup["data"]) #np.stack([np.array(tup["index"]), _f(tup["data"])],axis=1) #for bookkeeping we can check the index TODO -the order is very important!!!
         if self.sc != None:
             if not collect:  return self.sc.parallelize(gen).map(lambda x: f(x)).count()
             else:  
