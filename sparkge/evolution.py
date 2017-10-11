@@ -1,3 +1,4 @@
+#
 import random
 import numpy as np
 import pandas as pd
@@ -12,6 +13,9 @@ random_padded_individual = lambda l,L : rpad(random_individual(l),L)
 length_of = lambda p : np.sum(~np.isnan(p),axis=1)
 
 class strategy:
+    """
+    This is a vanilla strategy used by sparkge. In principle this would be extended or changed for another bundle of functions.
+    """
     def __init__(self, pop_size, genome_size, srate, mrate):
         self.n = pop_size
         self._max_l = genome_size
@@ -43,7 +47,7 @@ class strategy:
         return np.concatenate([self._x(chromosomes[split:], chromosomes[:split]),
                                self._x(chromosomes[:split], chromosomes[split:])])
 
-    def selection(self,individuals, return_pscores=False):
+    def selection(self,individuals):
         K = int(self.srate*self.n) 
         mates = 2*int(self.n-K)
         replacement = self.n-mates
@@ -51,8 +55,6 @@ class strategy:
         
         scores = scores - scores.max() #minimise
         scores = scores / scores.sum() #normalize
-        
-        if return_pscores: return scores
         
         selected = np.random.choice(range(self.n),mates+replacement,p=scores) 
         return selected[:mates], selected[mates:]
@@ -68,6 +70,10 @@ class strategy:
         return np.concatenate([genes[replace_idx], self.X(genes[pool_idx])]) + self.mutations(self.mrate)
 
 class chain:
+    """
+    A wrapper around a numpy array for a wrapped genome. Passing new array yields a random chain.
+    The choice logic is also added here so that during expression, the choices are given in the context of the chain and the produced symbol returned
+    """
     def __init__(self,l=None, max_wraps=3, default_length=30): 
         if l is None: l = np.random.randint(0,10,default_length)
         l = np.concatenate([l[~np.isnan(l)].astype(int) for i in range(max_wraps)])

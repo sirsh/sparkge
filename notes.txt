@@ -10,3 +10,6 @@ check if x is part of function
 check fit handler extension for symbols with choice of params and return of params
 initial value strategy for problem space configure function for warnrings, recusions etc. 
 
+
+TODO:
+SVG tree annotated with wrapped genome use, stats&store module, explore crossover matrices for destructive tendancies and find some genome "fitness filters", profile and optimization, priority: fitness function design

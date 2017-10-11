@@ -151,3 +151,4 @@ def _evaluate_against_data(genes, _symbol, data,p0):
             return np.random.uniform(1000,2000)
     def _fit_(row): return fit_symbol(_symbol(chain(row)),data,p0=p0)  
     return np.apply_along_axis(_fit_,1,genes)
+
