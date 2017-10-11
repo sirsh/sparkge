@@ -10,6 +10,9 @@ class options(dict):
     
 class sparkge_context:
     """
+    
+    A wrapper around spark for submitting jobs
+    
     Example
     arr = np.ones((100,20), np.int)
     def f (data) : return np.random.randint(0,100,len(data)) 

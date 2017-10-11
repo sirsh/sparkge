@@ -1,3 +1,7 @@
+"""
+Stores are an abstraction to dump data and save/log/report etc.
+
+"""
 class aerospike_store:
     def __init__(self,options=None):
         pass

@@ -14,7 +14,7 @@ length_of = lambda p : np.sum(~np.isnan(p),axis=1)
 
 class strategy:
     """
-    This is a vanilla strategy used by sparkge. In principle this would be extended or changed for another bundle of functions.
+    This is a vanilla strategy used by sparkge. In principle this would be extended or changed for another bundle of functions. 
     """
     def __init__(self, pop_size, genome_size, srate, mrate):
         self.n = pop_size

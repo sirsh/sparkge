@@ -1,3 +1,9 @@
+"""
+Symbols.py show a general pattern for gene expression using closures and decorators.
+This is currently focused on symbolic regression but the principles are general. 
+Terminals, operators and expressions are intended to be general structural elements to which any grammar/fuctions can be applied
+As I am focusing on regression only I have not tried to test for generality however this file should be treated like a general pattern for future.
+"""
 from functools import wraps
 from operator import *
 from math import *
@@ -56,6 +62,11 @@ def as_expression(genome, choices, args=[]):
     
 #signature modifier - switch from named args ot ordered args e.g. for curve fit
 def accepting_ordered_params(f, idpvars=["X"]):
+    """
+    Example modification of signature to suit certain calling approaches. 
+    Numerical libraries for example will optimize a function f(X, *params)
+    This is a work in progress
+    """
     def _f(*args):
         S = display(f)
         #convention for now - tbd... what is best for passing to fitting routines?
@@ -70,6 +81,7 @@ def accepting_ordered_params(f, idpvars=["X"]):
 
 #string representation of symbols
 def _get_dict_(F) :
+    #todo the last line needs to check for python version 2 or 3 and use a slightly different syntax
     if F == None or F.__closure__ == None: return {}
     return dict(zip(F.__code__.co_freevars, (c.cell_contents for c in F.__closure__)))
 
@@ -95,18 +107,24 @@ def _repr_(f):
     else: return None
     
 def display(f,printer='mathjax'):
+    """
+    Converts to a sympy form which has a nice display format, simplification and other features
+    """
     init_printing(use_latex=printer)
     try:
         return sympify(_repr_(f))
     except:
         return np.nan #temp cheat
     
-#plot symbol
+#plot symbol - todo
 #plt.plot([S(_x, *popt) for _x in x])
 
+#show tree - todo
 #simple evaluation sample    
 def _evaluate(population, _symbol, target_function= lambda x : 2*x*x- x**3+x**4, sample_x=list(range(4,7)), return_all=False):
-    #move thes out?
+    """
+    The evaluation against a passed in target function plus alot of boilerplate
+    """
     def __express_symbol__(x):
         def _f_(row): 
             try:  return _symbol(chain(row))(X=x)
@@ -133,6 +151,10 @@ def _evaluate(population, _symbol, target_function= lambda x : 2*x*x- x**3+x**4,
     return df["error"].values
 
 def _evaluate_against_data(genes, _symbol, data,p0):
+    """
+    The evaluation against a dataset plus alot of boilerplate
+    Fitness functions are called in from the providers/ module e.g. to fit a curve and test it's goodness of fit
+    """
     from . providers.fitness import curve_fit, goodness_of_fit
     
     def fit_symbol(S, data, p0):
