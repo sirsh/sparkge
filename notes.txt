@@ -13,3 +13,5 @@ initial value strategy for problem space configure function for warnrings, recus
 
 TODO:
 SVG tree annotated with wrapped genome use, stats&store module, explore crossover matrices for destructive tendancies and find some genome "fitness filters", profile and optimization, priority: fitness function design
+
+
